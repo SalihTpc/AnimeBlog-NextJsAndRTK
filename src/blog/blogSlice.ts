@@ -37,13 +37,19 @@ export const getAnime = createAsyncThunk("anime/getAnime", async () => {
   return await response.json();
 });
 
+export const getMoreAnime = async (url) => {
+  const response = await fetch(`${url}`);
+  return await response.json();
+};
+
 export const blogSlice = createSlice({
   name: "blog",
   initialState,
   reducers: {
-    addBlog: (state, action) => {
-      state.anime = [...state.anime, ...action.payload.results];
-      state.next = action.payload.next;
+    addBlog: (state) => {
+      const more = getMoreAnime(state.next);
+      state.anime = [...state.anime, ...more.results];
+      state.next = more.next;
     },
   },
   extraReducers: (builder) => {
