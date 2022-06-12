@@ -2,7 +2,7 @@
 import Head from "next/head";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addBlog, getAnime } from "../src/blog/blogSlice";
+import { addBlog, getAnime, getMoreAnime } from "../src/blog/blogSlice";
 import {
   decrement,
   increment,
@@ -15,7 +15,7 @@ import styles from "../styles/Home.module.css";
 function Home() {
   const dispatch = useDispatch();
   const { counter } = useSelector((state) => state);
-  const animes = useSelector((state) => state.blog.anime);
+  const { anime, next } = useSelector((state) => state.blog);
   const [entry, setEntry] = useState("");
   const numberEntry = Number(entry) || 0;
   return (
@@ -38,14 +38,14 @@ function Home() {
         <button onClick={() => dispatch(incrementByAmount(numberEntry))}>
           ADD
         </button>
-        {animes.map((p) => (
+        {anime.map((p) => (
           <div key={p.id} className={styles.image}>
             <img alt={p.title} src={p.image} />
             <h2>{p.title}</h2>
             <p>{p.body}</p>
           </div>
         ))}
-        <button onClick={() => dispatch(addBlog())}>Next Page</button>
+        <button onClick={() => dispatch(getMoreAnime(next))}>Next Page</button>
       </div>
     </div>
   );

@@ -37,20 +37,24 @@ export const getAnime = createAsyncThunk("anime/getAnime", async () => {
   return await response.json();
 });
 
-export const getMoreAnime = async (url) => {
-  const response = await fetch(`${url}`);
-  return await response.json();
-};
+export const getMoreAnime = createAsyncThunk(
+  "anime/getMoreAnime",
+  async (url) => {
+    const response = await fetch(`${url}`);
+    return await response.json();
+  }
+);
 
 export const blogSlice = createSlice({
   name: "blog",
   initialState,
   reducers: {
-    addBlog: (state) => {
-      const more = getMoreAnime(state.next);
-      state.anime = [...state.anime, ...more.results];
-      state.next = more.next;
-    },
+    // addBlog: (state) => {
+    //   const more = dispatch(getMoreAnime(state.next));
+    //   console.log(more);
+    //   state.anime = [...state.anime, ...more.results];
+    //   state.next = more.next;
+    // },
   },
   extraReducers: (builder) => {
     builder
@@ -59,7 +63,7 @@ export const blogSlice = createSlice({
       })
       .addCase(getAnime.fulfilled, (state, { payload }) => {
         state.pending = false;
-        state.anime = payload.results;
+        state.anime = [...payload.results];
         state.next = payload.next;
         state.count = payload.count;
       })
